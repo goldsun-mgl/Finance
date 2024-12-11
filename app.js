@@ -5,6 +5,8 @@ var uiController = (function() {
     inputType: ".add__type",
     inputDesc: ".add__description",
     inputValue: ".add__value",
+    listIncome: ".income__list",
+    listExpense: ".expenses__list",
     // appcontroler-ийн клаас учраас үүнийг авах өөр функц бичих
     addBtn: ".add__btn"
   };
@@ -17,18 +19,34 @@ var uiController = (function() {
         };
         
       },
-      // addBtn(.add__btn)классыг авах функц
+      // addBtn(.add__btn)классуудыг авах функц
       getDOMstrings: function() {
         return DOMstrings;
       },
+      // Бичлэгүүдийг цэвэрлэх
+      clearFields: function() {
+        var fields = document.querySelectorAll(DOMstrings.inputDesc + ", " + DOMstrings.inputValue);
+        // Convert list to Array-fields нь жагсаалт учир массивт шилжүүлж үйлдэл хийнэ
+        var fieldsArr = Array.prototype.slice.call(fields);
+        // Массиваас Давталтаар бичлэгүүдийн утгыг 0 болгох
+        //for (var i = 0; i < fieldsArr.length; i++) {
+          //fieldsArr[i].value = "";
+        //}
+        fieldsArr.forEach(function(el, index, array) {
+          el.value = "";
+        });
+        //Курсорыг эхний бичлэгт авчрах
+        fieldsArr[0].focus();
+      },
+      
       addListItem: function(item, type) {
         // Орлого,зарлагын элемтийг агуулсан html-ийг бэлтгэнэ
         var html, list;
         if(type === 'inc') {
-          list = '.income__list';
+          list = DOMstrings.listIncome;
           html = '<div class="item clearfix" id="income-%id%"><div class="item__description">$DESCRIPTION$</div><div class="right clearfix"><div class="item__value">+ $$Value</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
         } else {
-          list = '.expenses__list';
+          list = DOMstrings.listExpense;
           html ='<div class="item clearfix" id="expense-%id%"><div class="item__description">$DESCRIPTION$</div><div class="right clearfix"><div class="item__value">- $$Value</div><div class="item__percentage">21%</div><div class="item__delete">          <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
         }
         
@@ -96,6 +114,7 @@ var uiController = (function() {
       var item = financeController.addItem(input.type, input.description, input.value);
       // 3. Олж авсан өгөгдлүүдээ тохирох хэсэгт гаргах
       uiController.addListItem(item, input.type);
+      uiController.clearFields();
       // 4.Төсвийг тооцоолох
       // 5.Эцсийн үлдгдэл тооцоог дэлгэцэнд гаргах
     };
