@@ -15,7 +15,7 @@ var uiController = (function() {
         return {
           type: document.querySelector(DOMstrings.inputType).value,
           description: document.querySelector(DOMstrings.inputDesc).value,
-          value: document.querySelector(DOMstrings.inputValue).value
+          value: parseInt(document.querySelector(DOMstrings.inputValue).value)
         };
         
       },
@@ -38,7 +38,7 @@ var uiController = (function() {
         //Курсорыг эхний бичлэгт авчрах
         fieldsArr[0].focus();
       },
-      
+      //Олж авсан өгөгдлүүдээ тохирох хэсэгт гаргах
       addListItem: function(item, type) {
         // Орлого,зарлагын элемтийг агуулсан html-ийг бэлтгэнэ
         var html, list;
@@ -49,7 +49,6 @@ var uiController = (function() {
           list = DOMstrings.listExpense;
           html ='<div class="item clearfix" id="expense-%id%"><div class="item__description">$DESCRIPTION$</div><div class="right clearfix"><div class="item__value">- $$Value</div><div class="item__percentage">21%</div><div class="item__delete">          <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
         }
-        
         // Тэр html дотроо орлого зарлагын утгуудыг REPLACE ашиглан өөрчилж өгнө
         html = html.replace('%id%', item.id);
         html = html.replace('$DESCRIPTION$', item.description);
@@ -110,13 +109,15 @@ var uiController = (function() {
     var ctrlAddItem = function() {
       // 1. Оруулсан өгөгдлийг дэлгэцнээс олж авах
       var input = uiController.getInput();
-      // 2. Олж авсан өгөгдлүүдээ Санхүүгийн модульд дамжуулж тэнд хадгалах
+      if(input.description !== "" && input.value !== "") {
+        // 2. Олж авсан өгөгдлүүдээ Санхүүгийн модульд дамжуулж тэнд хадгалах
       var item = financeController.addItem(input.type, input.description, input.value);
       // 3. Олж авсан өгөгдлүүдээ тохирох хэсэгт гаргах
       uiController.addListItem(item, input.type);
       uiController.clearFields();
       // 4.Төсвийг тооцоолох
       // 5.Эцсийн үлдгдэл тооцоог дэлгэцэнд гаргах
+      }
     };
     var setupEventListeners = function() {
       var DOM = uiController.getDOMstrings();
