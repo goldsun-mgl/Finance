@@ -8,7 +8,11 @@ var uiController = (function() {
     listIncome: ".income__list",
     listExpense: ".expenses__list",
     // appcontroler-ийн клаас учраас үүнийг авах өөр функц бичих
-    addBtn: ".add__btn"
+    addBtn: ".add__btn",
+    tusuvLabel: ".budget__value",
+    incomeLabel: ".budget__income--value",
+    expenseLabel: ".budget__expenses--value",
+    percentageLabel: ".budget__expenses--percentage"
   };
     return {
       getInput: function() {
@@ -38,6 +42,17 @@ var uiController = (function() {
         //Курсорыг эхний бичлэгт авчрах
         fieldsArr[0].focus();
       },
+      // Төсвийг дэлгэц дээр харуулах
+      tusviigHaruulah: function(tusuv) {
+        document.querySelector(DOMstrings.tusuvLabel).textContent = tusuv.tusuv;
+        document.querySelector(DOMstrings.incomeLabel).textContent = tusuv.totalInc;
+        document.querySelector(DOMstrings.expenseLabel).textContent = tusuv.totalExp;
+        if(tusuv.huvi !== 0){
+          document.querySelector(DOMstrings.percentageLabel).textContent = tusuv.huvi + '%';
+        }else {
+          document.querySelector(DOMstrings.percentageLabel).textContent = tusuv.huvi;
+        }
+      },
       //Олж авсан өгөгдлүүдээ тохирох хэсэгт гаргах
       addListItem: function(item, type) {
         // Орлого,зарлагын элемтийг агуулсан html-ийг бэлтгэнэ
@@ -53,6 +68,7 @@ var uiController = (function() {
         html = html.replace('%id%', item.id);
         html = html.replace('$DESCRIPTION$', item.description);
         html = html.replace('$$Value', item.value);
+        //html = html.replace('%huvi%', financeController.tusviigAvah.data.huvi);
         //Бэлтгэсэн html-ээ DOM-руу хийж өгнө
         document.querySelector(list).insertAdjacentHTML('beforeend', html);
       }
@@ -147,7 +163,7 @@ var uiController = (function() {
       // 5.Эцсийн үлдгдэл тооцоог дэлгэцэнд гаргах
       var tusuv = financeController.tusviigAvah();
       // 6.
-      console.log(tusuv);
+      uiController.tusviigHaruulah(tusuv);
       }
     };
     var setupEventListeners = function() {
@@ -166,6 +182,12 @@ var uiController = (function() {
     return {
       init: function() {
         console.log("Программ эхэллээ.");
+        uiController.tusviigHaruulah({
+          tusuv: 0,
+          huvi: 0,
+          totalInc: 0,
+          totalExp: 0
+        });
         setupEventListeners();
       }
     };
